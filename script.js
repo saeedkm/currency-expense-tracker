@@ -93,8 +93,8 @@ class CurrencyExpenseTracker {
         try {
             this.showLoadingState();
             
-            // Using ExchangeRate-API (free tier)
-            const response = await fetch('https://api.exchangerate-api.com/v4/latest/INR');
+            // Using ExchangeRate-API (free tier) - fetch USD as base to get proper rates
+            const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
             
             if (!response.ok) {
                 throw new Error('Failed to fetch exchange rates');
@@ -102,12 +102,21 @@ class CurrencyExpenseTracker {
             
             const data = await response.json();
             
-            // Convert to rates relative to INR (since INR is our base currency)
-            this.exchangeRates = {};
-            for (const [currency, rate] of Object.entries(data.rates)) {
-                this.exchangeRates[currency] = 1 / rate; // Convert to how many units = 1 INR
+            // Store rates where each rate represents how many units of that currency = 1 USD
+            this.exchangeRates = data.rates;
+            
+            // Get INR rate (how many INR = 1 USD)
+            const usdToInrRate = this.exchangeRates['INR'];
+            
+            // Convert all rates to show how many INR = 1 unit of each currency
+            for (const [currency, rate] of Object.entries(this.exchangeRates)) {
+                if (currency === 'INR') {
+                    this.exchangeRates[currency] = 1; // 1 INR = 1 INR
+                } else {
+                    // Convert: (1 unit of currency) * (USD per unit) * (INR per USD) = INR per unit
+                    this.exchangeRates[currency] = usdToInrRate / rate;
+                }
             }
-            this.exchangeRates['INR'] = 1; // INR to INR is always 1
             
             this.lastRateUpdate = now.toString();
             
@@ -134,7 +143,8 @@ class CurrencyExpenseTracker {
             return amount; // Return original amount if rate not found
         }
         
-        return amount / rate;
+        // Rate now represents how many INR = 1 unit of fromCurrency
+        return amount * rate;
     }
 
     async showConversionPreview() {
