@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Expense Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💰 Currency Expense Tracker</h1>
+            <p>Track your expenses with real-time currency conversion to INR</p>
+        </header>
+
+        <main>
+            <!-- Expense Entry Form -->
+            <section class="expense-form-section">
+                <h2>Add New Expense</h2>
+                <form id="expense-form" class="expense-form">
+                    <div class="form-group">
+                        <label for="amount">Amount:</label>
+                        <input type="number" id="amount" step="0.01" min="0" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="currency">Currency:</label>
+                        <select id="currency" required>
+                            <option value="INR">INR - Indian Rupee</option>
+                            <option value="USD">USD - US Dollar</option>
+                            <option value="EUR">EUR - Euro</option>
+                            <option value="GBP">GBP - British Pound</option>
+                            <option value="JPY">JPY - Japanese Yen</option>
+                            <option value="AUD">AUD - Australian Dollar</option>
+                            <option value="CAD">CAD - Canadian Dollar</option>
+                            <option value="CHF">CHF - Swiss Franc</option>
+                            <option value="CNY">CNY - Chinese Yuan</option>
+                            <option value="SGD">SGD - Singapore Dollar</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="description">Description:</label>
+                        <input type="text" id="description" placeholder="e.g., Lunch, Transport, Shopping" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="date">Date:</label>
+                        <input type="date" id="date" required>
+                    </div>
+                    
+                    <button type="submit" class="add-btn">Add Expense</button>
+                </form>
+                
+                <div id="conversion-preview" class="conversion-preview" style="display: none;">
+                    <p>Converting... <span class="loading">⏳</span></p>
+                </div>
+            </section>
+
+            <!-- Quick Currency Converter -->
+            <section class="converter-section">
+                <h2>Quick Currency Converter</h2>
+                <div class="converter">
+                    <div class="converter-input">
+                        <input type="number" id="convert-amount" placeholder="Enter amount" step="0.01" min="0">
+                        <select id="convert-from">
+                            <option value="USD">USD</option>
+                            <option value="EUR">EUR</option>
+                            <option value="GBP">GBP</option>
+                            <option value="JPY">JPY</option>
+                            <option value="AUD">AUD</option>
+                            <option value="CAD">CAD</option>
+                            <option value="CHF">CHF</option>
+                            <option value="CNY">CNY</option>
+                            <option value="SGD">SGD</option>
+                        </select>
+                    </div>
+                    <div class="converter-arrow">→</div>
+                    <div class="converter-result">
+                        <span id="converted-amount">0.00</span>
+                        <span class="currency-symbol">INR</span>
+                    </div>
+                </div>
+                <div class="exchange-rate-info">
+                    <small id="exchange-rate-display">Exchange rates updated: Never</small>
+                </div>
+            </section>
+
+            <!-- Expense Summary -->
+            <section class="summary-section">
+                <h2>Expense Summary</h2>
+                <div class="summary-tabs">
+                    <button class="tab-btn active" data-tab="daily">Daily</button>
+                    <button class="tab-btn" data-tab="monthly">Monthly</button>
+                </div>
+                
+                <div class="summary-content">
+                    <div class="total-display">
+                        <h3 id="summary-title">Today's Total</h3>
+                        <div class="total-amount">
+                            <span id="total-amount">₹0.00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="date-filter">
+                        <input type="date" id="filter-date" title="Filter by date">
+                        <input type="month" id="filter-month" title="Filter by month" style="display: none;">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Expense List -->
+            <section class="expense-list-section">
+                <div class="section-header">
+                    <h2>Expense History</h2>
+                    <div class="list-actions">
+                        <button id="export-btn" class="action-btn">📊 Export CSV</button>
+                        <button id="clear-btn" class="action-btn danger">🗑️ Clear All</button>
+                    </div>
+                </div>
+                
+                <div id="expense-list" class="expense-list">
+                    <div class="no-expenses">
+                        <p>No expenses recorded yet. Add your first expense above! 📝</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Currency rates provided by ExchangeRate-API | Last updated: <span id="last-updated">Never</span></p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
